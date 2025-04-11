@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Santerc's Roselia Stage</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #1a1025 0%, #2d1b4e 50%, #1a1025 100%);
+      color: #ffffff;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(1px 1px at 10% 10%, #b48eff 100%, transparent),
+        radial-gradient(1px 1px at 50% 50%, #9370DB 100%, transparent),
+        radial-gradient(2px 2px at 80% 20%, #483D8B 100%, transparent),
+        radial-gradient(2px 2px at 20% 80%, #7B68EE 100%, transparent);
+      background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+      animation: starsAnimation 120s linear infinite;
+      opacity: 0.3;
+      z-index: -1;
+    }
+    @keyframes starsAnimation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    header {
+      text-align: center;
+      padding: 3rem 1rem 1rem;
+      background: linear-gradient(180deg, rgba(103,78,167,0.8), transparent);
+      backdrop-filter: blur(5px);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at center, rgba(180, 142, 255, 0.2) 0%, transparent 70%);
+      animation: headerGlow 10s ease-in-out infinite;
+      z-index: -1;
+    }
+    @keyframes headerGlow {
+      0%, 100% { transform: scale(1); opacity: 0.2; }
+      50% { transform: scale(1.1); opacity: 0.4; }
+    }
+    header h1 {
+      font-size: 3rem;
+      color: #b48eff;
+      text-shadow: 0 0 10px #b48eff, 0 0 20px #9370DB;
+      margin-bottom: 0.5rem;
+    }
+    header::after {
+      content: "ロゼリア";
+      display: block;
+      font-size: 1.2rem;
+      color: #ffffff;
+      opacity: 0.8;
+      letter-spacing: 0.5rem;
+      margin-top: -0.8rem;
+    }
+    .music-player {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .music-button {
+      background: none;
+      border: 2px solid #b48eff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      color: #b48eff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .music-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(180, 142, 255, 0.2);
+      transform: scale(0);
+      transition: 0.3s ease;
+      border-radius: 50%;
+    }
+    .music-button:hover {
+      color: #ffffff;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #b48eff;
+    }
+    .music-button:hover::before {
+      transform: scale(1);
+    }
+    .music-button.playing {
+      background: rgba(180, 142, 255, 0.3);
+    }
+    .icon-egg {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      width: 128px; /* Increased from 64px to 128px */
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(180, 142, 255, 0.5));
+      z-index: 10000;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .members {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 600px;
+      perspective: 2000px;
+      padding: 4rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .spotlight {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 500px;
+      height: 500px;
+      transform: translate(-50%, -55%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .spotlight::before,
+    .spotlight::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .spotlight::before {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(ellipse at center,
+        rgba(180, 142, 255, 0.4) 0%,
+        rgba(120, 80, 180, 0.25) 40%,
+        transparent 70%);
+      filter: blur(40px);
+      animation: glowCore 3s ease-in-out infinite;
+    }
+    .spotlight::after {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(ellipse at center,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(180, 142, 255, 0.1) 30%,
+        transparent 80%);
+      filter: blur(30px);
+      animation: lensFlare 4s ease-in-out infinite;
+    }
+    @keyframes glowCore {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.05);
+        opacity: 1;
+      }
+    }
+    @keyframes lensFlare {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.4;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.6;
+      }
+    }
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+    }
+    .member-card {
+      position: absolute;
+      width: 240px;
+      height: 360px;
+      left: 50%;
+      top: 50%;
+      transform-style: preserve-3d;
+      transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out;
+      background: linear-gradient(135deg, #2a1b47, #1a0f2e);
+      border-radius: 15px;
+      border: 2px solid #b48eff;
+      box-shadow: 0 0 15px rgba(180, 142, 255, 0.3);
+      transform-origin: center center;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .member-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent);
+      transform: skewX(-15deg);
+      transition: 0.5s;
+      z-index: 1;
+    }
+    .member-card.active::before {
+      animation: cardShine 1.5s ease-in-out;
+    }
+    @keyframes cardShine {
+      100% { left: 150%; }
+    }
+    .member-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, 
+                  rgba(180, 142, 255, 0.3) 0%, 
+                  transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+    .member-card.active {
+      box-shadow: 0 0 25px rgba(180, 142, 255, 0.6), 0 0 40px rgba(147, 112, 219, 0.4);
+      transform: scale(1.1) translate(-50%, -50%) translateZ(50px);
+      z-index: 10;
+    }
+    .member-card.active::after {
+      opacity: 1;
+    }
+    .member-card h3 {
+      color: #b48eff;
+      text-align: center;
+      font-size: 1.5em;
+      margin-top: 2rem;
+      text-shadow: 0 0 5px rgba(180, 142, 255, 0.7);
+      position: relative;
+    }
+    .member-card h3::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 2px;
+      background: #b48eff;
+      margin: 0.5rem auto;
+      box-shadow: 0 0 5px rgba(180, 142, 255, 0.7);
+    }
+    .member-card p {
+      color: #fff;
+      text-align: center;
+      margin: 10px 0;
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+    .member-card .card-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 65%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.7;
+      transition: opacity 0.5s ease;
+    }
+    .member-card.active .card-image {
+      opacity: 0.9;
+    }
+    .member-card .card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 35%;
+      background: linear-gradient(to top, rgba(26, 16, 37, 1), rgba(26, 16, 37, 0.8), transparent);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 1.5rem;
+    }
+    .member-card .card-spotlight {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 30%, 
+                  rgba(180, 142, 255, 0.3) 0%, 
+                  transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .member-card.active .card-spotlight {
+      opacity: 1;
+    }
+    .github-area {
+      text-align: center;
+      padding: 3rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .github-area::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, rgba(180, 142, 255, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .github-area h2 {
+      color: #b48eff;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 8px #b48effaa, 0 0 15px rgba(147, 112, 219, 0.5);
+      position: relative;
+      display: inline-block;
+    }
+    .github-area h2::before,
+    .github-area h2::after {
+      content: '';
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #b48eff, transparent);
+      width: 50%;
+      bottom: -10px;
+    }
+    .github-area h2::before {
+      left: -60%;
+    }
+    .github-area h2::after {
+      right: -60%;
+    }
+    .github-stats {
+      display: inline-block;
+      margin: 1rem;
+      transition: 0.3s ease;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .github-stats::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      z-index: -1;
+      background: linear-gradient(45deg, #b48eff, #7B68EE, #483D8B, #b48eff);
+      border-radius: 12px;
+      background-size: 400%;
+      opacity: 0;
+      transition: 0.5s ease;
+    }
+    .github-stats:hover::before {
+      opacity: 1;
+      animation: borderGlow 3s linear infinite;
+    }
+    @keyframes borderGlow {
+      0% { background-position: 0 0; }
+      50% { background-position: 400% 0; }
+      100% { background-position: 0 0; }
+    }
+    .github-stats:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(26, 16, 37, 0.4);
+    }
+    
+    /* 自定义贡献日历 */
+    .github-count-contributions {
+      padding: 20px;
+      background: rgba(26, 16, 37, 0.4);
+      border-radius: 10px;
+      display: inline-block;
+    }
+    
+    .custom-contribution-calendar {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-gap: 3px;
+      padding: 10px;
+    }
+    
+    .custom-contribution-calendar .month-label {
+      grid-column: span 1;
+      font-size: 0.7em;
+      text-align: center;
+      color: #a088ff;
+      padding: 5px 0;
+    }
+    
+    .custom-contribution-calendar .contribution-day {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .custom-contribution-calendar .contribution-day:hover {
+      transform: scale(1.5);
+      box-shadow: 0 0 5px rgba(180, 142, 255, 0.7);
+      z-index: 1;
+    }
+    
+    .level-0 { background-color: rgba(26, 16, 37, 0.8); }
+    .level-1 { background-color: rgba(103, 78, 167, 0.5); }
+    .level-2 { background-color: rgba(147, 112, 219, 0.6); }
+    .level-3 { background-color: rgba(180, 142, 255, 0.7); }
+    .level-4 { background-color: rgba(180, 142, 255, 0.9); }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: #888;
+      position: relative;
+      background: linear-gradient(0deg, rgba(26, 16, 37, 0.8), transparent);
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 25%;
+      width: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(180, 142, 255, 0.5), transparent);
+    }
+    a {
+      color: #a088ff;
+      text-decoration: none;
+      position: relative;
+      transition: 0.3s ease;
+    }
+    a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: #b48eff;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+    a:hover {
+      text-shadow: 0 0 5px #b48eff;
+      color: #b48eff;
+    }
+    a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+    .rose-petals {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.5;
+      pointer-events: none;
+      animation: petalFall linear infinite;
+    }
+    @keyframes petalFall {
+      0% {
+        transform: translateY(-5vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(105vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    .mouse-glow {
+      position: fixed;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle at center, 
+                  rgba(180, 142, 255, 0.15) 0%, 
+                  transparent 70%);
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      mix-blend-mode: screen;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    /* 鼠标拖尾特效 */
+    canvas#mouseTrail {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+    
+    /* 自定义鼠标 */
+    .custom-cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #b48eff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 1001;
+      mix-blend-mode: exclusion;
+    }
+    .card-flare {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    .card-flare::after {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: -100%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.05),
+        transparent
+      );
+      transform: rotate(25deg);
+    }
+    .member-card.active .card-flare::after {
+      animation: cardFlare 2s ease-in-out infinite;
+    }
+    @keyframes cardFlare {
+      0% { left: -100%; }
+      40%, 100% { left: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="mouseTrail"></canvas>
+  <div class="custom-cursor"></div>
+  <div class="mouse-glow"></div>
+  <div class="rose-petals"></div>
+  <img src="Roselia.png" alt="Roselia Icon" class="icon-egg" />
+  <header>
+    <h1>Santerc's Code Stage</h1>
+    <div class="music-player">
+      <button class="music-button" id="music-btn" onclick="toggleMusic()">
+        <i class="fas fa-music"></i>
+      </button>
+      <audio id="bgm" loop>
+        <source src="roselia-theme.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </header>
+
+  <section class="members">
+    <div class="spotlight"></div>
+    <div class="stage">
+      <div class="member-card" data-index="0">
+        <div class="card-image" style="background-image: url('/api/placeholder/240/220')"></div>
+        <div class="card-content">
+          <h3>Proj1</h3>
+          <p>Subscription</p>
+        </div>
+        <div class="card-spotlight"></div>
+        <div class="card-flare"></div>
+      </div>
+      <div class="member-card" data-index="1">
+        <div class="card-image" style="background-image: url('/api/placeholder/240/220')"></div>
+        <div class="card-content">
+          <h3>Proj2</h3>
+          <p>Subscription</p>
+        </div>
+        <div class="card-spotlight"></div>
+        <div class="card-flare"></div>
+      </div>
+      <div class="member-card" data-index="2">
+        <div class="card-image" style="background-image: url('/api/placeholder/240/220')"></div>
+        <div class="card-content">
+          <h3>Proj3</h3>
+          <p>Subscription</p>
+        </div>
+        <div class="card-spotlight"></div>
+        <div class="card-flare"></div>
+      </div>
+      <div class="member-card" data-index="3">
+        <div class="card-image" style="background-image: url('/api/placeholder/240/220')"></div>
+        <div class="card-content">
+          <h3>Proj4</h3>
+          <p>Subscription</p>
+        </div>
+        <div class="card-spotlight"></div>
+        <div class="card-flare"></div>
+      </div>
+      <div class="member-card" data-index="4">
+        <div class="card-image" style="background-image: url('/api/placeholder/240/220')"></div>
+        <div class="card-content">
+          <h3>Proj5</h3>
+          <p>Subscription</p>
+        </div>
+        <div class="card-spotlight"></div>
+        <div class="card-flare"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="github-area">
+    <h2>✨ GitHub Activity ✨</h2>
+    <br/>
+    <div class="github-stats github-contribution-graph">
+      <img src="https://ghchart.rshah.org/483D8B/Santerc" 
+           style="filter: hue-rotate(-10deg) brightness(1.2);
+                  background: linear-gradient(135deg, 
+                    rgba(26, 16, 37, 0.8) 0%, 
+                    rgba(45, 27, 78, 0.8) 50%, 
+                    rgba(26, 16, 37, 0.8) 100%);
+                  border-radius: 10px;
+                  padding: 20px;
+                  border: 1px solid rgba(180, 142, 255, 0.2);
+                  transition: all 0.5s ease;" 
+           onmouseover="this.style.transform='translateY(-3px)';
+                        this.style.boxShadow='0 5px 15px rgba(180, 142, 255, 0.15)'"
+           onmouseout="this.style.transform='translateY(0)';
+                       this.style.boxShadow='none'" />
+    </div>
+    <br/>
+    <div class="github-stats">
+      <img src="https://github-readme-stats.vercel.app/api?username=Santerc&show_icons=true&theme=tokyonight&hide_border=true&icon_color=b48eff" alt="GitHub Stats" />
+    </div>
+    <br/>
+    <div class="github-stats">
+      <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Santerc&layout=compact&theme=tokyonight&hide_border=true" alt="Top Langs" />
+    </div>
+    <!-- <br/>
+    <div class="github-stats github-count-contributions">
+      <div id="contribution-calendar" class="custom-contribution-calendar"></div>
+    </div> -->
+  </section>
+
+  <footer>
+    📺 我的B站主页：<a href="https://space.bilibili.com/543213068?spm_id_from=333.1007.0.0" target="_blank">@Santerc</a><br/>
+    © 2025 Santerc - GitHub Home Page
+  </footer>
+
+  <script>
+    // 音乐控制
+    const music = document.getElementById('bgm');
+    const musicBtn = document.getElementById('music-btn');
+    
+    function toggleMusic() {
+      if (music.paused) {
+        music.play();
+        musicBtn.classList.add('playing');
+      } else {
+        music.pause();
+        musicBtn.classList.remove('playing');
+      }
+    }
+    
+    // 鼠标拖尾特效
+    const canvas = document.getElementById('mouseTrail');
+    const ctx = canvas.getContext('2d');
+    const customCursor = document.querySelector('.custom-cursor');
+    
+    // 设置canvas尺寸
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // 粒子数组
+    const particles = [];
+    
+    // 粒子类
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 3 + 2;
+        this.color = `hsla(${Math.random() * 20 + 260}, 100%, 70%, ${Math.random() * 0.5 + 0.3})`;
+        this.speedX = Math.random() * 2 - 1;
+        this.speedY = Math.random() * 2 - 1;
+        this.life = 20;
+      }
+      
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+        
+        if (this.size > 0.2) this.size -= 0.1;
+      }
+      
+      draw() {
+        ctx.fillStyle = `rgba(180, 142, 255, ${this.life})`;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#b48eff';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 添加光晕
+        // ctx.beginPath();
+        // ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+        // ctx.closePath();
+        // const gradient = ctx.createRadialGradient(
+        //   this.x, this.y, this.size * 0.5,
+        //   this.x, this.y, this.size * 2
+        // );
+        // gradient.addColorStop(0, `hsla(${parseInt(this.color)}, 100%, 70%, 0.3)`);
+        // gradient.addColorStop(1, 'transparent');
+        // ctx.fillStyle = gradient;
+        // ctx.fill();
+      }
+    }
+
+    // 卡片旋转
+    const stage = document.querySelector('.stage');
+    const cards = document.querySelectorAll('.member-card');
+    const cardCount = cards.length;
+    const radius = 400;
+    let currentIndex = 0;
+
+    function updateCardPositions() {
+      cards.forEach((card, index) => {
+        const angle = ((index - currentIndex + cardCount) % cardCount) * (360 / cardCount);
+        const rad = angle * Math.PI / 180;
+        const x = Math.sin(rad) * radius;
+        const z = Math.cos(rad) * radius;
+
+        card.style.transform = `translate(-50%, -50%) translate3d(${x}px, 0, ${z}px) rotateY(${-angle}deg)`;
+        card.classList.toggle('active', index === currentIndex);
+      });
+    }
+
+    function handleCardClick(e) {
+      const index = parseInt(e.currentTarget.dataset.index);
+      currentIndex = index;
+      updateCardPositions();
+    }
+
+    cards.forEach(card => card.addEventListener('click', handleCardClick));
+    updateCardPositions(); // 初始展示
+
+    // 鼠标跟踪效果
+    const mouseGlow = document.querySelector('.mouse-glow');
+    
+    document.addEventListener('mousemove', (e) => {
+      mouseGlow.style.opacity = '1';
+      mouseGlow.style.left = e.clientX + 'px';
+      mouseGlow.style.top = e.clientY + 'px';
+      
+      // 记录最后鼠标位置
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+    });
+
+    document.addEventListener('mouseleave', () => {
+      mouseGlow.style.opacity = '0';
+    });
+
+    // 花瓣效果
+    const rosePetals = document.querySelector('.rose-petals');
+    const colors = ['#b48eff', '#9370DB', '#7B68EE', '#483D8B'];
+    
+    function createPetal() {
+      const petal = document.createElement('div');
+      petal.classList.add('petal');
+      
+      // 随机尺寸、位置和动画时间
+      const size = Math.random() * 15 + 10;
+      const left = Math.random() * 100;
+      const animDuration = Math.random() * 5 + 10;
+      const delay = Math.random() * 5;
+      const rotate = Math.random() * 360;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      
+      petal.style.width = `${size}px`;
+      petal.style.height = `${size}px`;
+      petal.style.left = `${left}%`;
+      petal.style.animationDuration = `${animDuration}s`;
+      petal.style.animationDelay = `${delay}s`;
+      petal.style.transform = `rotate(${rotate}deg)`;
+      petal.style.backgroundColor = color;
+      petal.style.borderRadius = '30% 70% 70% 30% / 30% 30% 70% 70%';
+      petal.style.opacity = '0.2';
+      petal.style.boxShadow = `0 0 5px ${color}`;
+      
+      rosePetals.appendChild(petal);
+      
+      // 动画结束后移除花瓣
+      setTimeout(() => {
+        petal.remove();
+      }, (animDuration + delay) * 1000);
+    }
+    
+    // 初始生成一些花瓣
+    for (let i = 0; i < 15; i++) {
+      createPetal();
+    }
+    
+    // 定期生成新的花瓣
+    setInterval(createPetal, 2000);
+    
+    // 鼠标位置变量
+    let mouseX = 0;
+    let mouseY = 0;
+    let isMouseMoving = false;
+    
+    // 监听鼠标移动
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      isMouseMoving = true;
+      
+      // 自定义鼠标
+      const cursorImage = 'cursor.png'; // 替换为你的鼠标图片路径
+      customCursor.style.width = '32px'; // 设置鼠标图片大小
+      customCursor.style.height = '32px';
+      customCursor.style.border = 'none';
+      customCursor.style.background = `url(${cursorImage}) no-repeat center center`;
+      customCursor.style.backgroundSize = 'contain';
+      customCursor.style.left = `${mouseX}px`;
+      customCursor.style.top = `${mouseY}px`;
+      
+      // 每次移动添加粒子
+      for (let i = 0; i < 3; i++) {
+        particles.push(new Particle(mouseX, mouseY));
+      }
+    });
+    
+    document.addEventListener('mousedown', () => {
+      // 点击时添加更多粒子
+      for (let i = 0; i < 10; i++) {
+        particles.push(new Particle(mouseX, mouseY));
+      }
+      
+      // 改变鼠标样式
+      customCursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
+    });
+    
+    document.addEventListener('mouseup', () => {
+      customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
+    
+    // 离开窗口时隐藏自定义鼠标
+    document.addEventListener('mouseleave', () => {
+      customCursor.style.opacity = '0';
+    });
+    
+    document.addEventListener('mouseenter', () => {
+      customCursor.style.opacity = '1';
+    });
+    
+    // 动画循环
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // 更新和绘制粒子
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        
+        if (particles[i].life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
+    
+    // 创建自定义GitHub贡献日历
+    function createContributionCalendar() {
+      const calendar = document.getElementById('contribution-calendar');
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      // 添加月份标签
+      months.forEach(month => {
+        const monthLabel = document.createElement('div');
+        monthLabel.className = 'month-label';
+        monthLabel.textContent = month;
+        calendar.appendChild(monthLabel);
+      });
+      
+      // 生成贡献方块
+      const daysCount = 365;
+      for (let i = 0; i < daysCount; i++) {
+        const day = document.createElement('div');
+        day.className = 'contribution-day';
+        
+        // 随机贡献等级
+        const level = Math.floor(Math.random() * 5);
+        day.classList.add(`level-${level}`);
+        
+        // 添加悬停提示
+        const randomContributions = Math.floor(Math.random() * 10) * level;
+        day.title = `${randomContributions} contributions on ${months[Math.floor(i/30)]} ${(i%30)+1}, 2024`;
+        
+        calendar.appendChild(day);
+      }
+    }
+    
+    // 初始化调用
+    createContributionCalendar();
+  </script>
+</body>
+</html>
